@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תוצאות משוב 2 — טכנודע</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink: #E6007E; --teal: #00B4C5; --orange: #F39200;
+            --purple: #6D3078; --blue: #0080C9; --green: #78B82A;
+            --yellow: #FDC300; --dark: #122231; --bg: #f4f6fb;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Heebo', sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; }
+
+        .header {
+            background: var(--dark); color: white;
+            padding: 20px 24px; display: flex; align-items: center; gap: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+        .header img { width: 52px; filter: brightness(10); }
+        .header-text h1 { font-size: 1.2rem; font-weight: 900; }
+        .header-text p { font-size: 0.8rem; opacity: 0.6; margin-top: 2px; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 24px 16px 48px; }
+
+        .summary-strip { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+        .summary-card { flex: 1; min-width: 120px; background: white; border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+        .summary-card .val { font-size: 2rem; font-weight: 900; }
+        .summary-card .lbl { font-size: 0.75rem; color: #999; margin-top: 2px; }
+
+        .section { background: white; border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+        .section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+        .section-badge { width: 30px; height: 30px; border-radius: 50%; color: white; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .section-title h2 { font-size: 0.95rem; font-weight: 700; line-height: 1.5; }
+
+        .avg-row { display: flex; align-items: center; gap: 12px; }
+        .avg-number { font-size: 2.8rem; font-weight: 900; }
+        .avg-stars { font-size: 1.6rem; letter-spacing: 2px; }
+        .avg-count { font-size: 0.8rem; color: #aaa; }
+
+        .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .bar-label { min-width: 110px; font-size: 0.85rem; text-align: right; color: #555; }
+        .bar-track { flex: 1; height: 22px; background: #f0f0f0; border-radius: 11px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 11px; transition: width 1s ease; display: flex; align-items: center; justify-content: flex-end; padding-left: 8px; }
+        .bar-count { font-size: 0.75rem; font-weight: 700; color: white; }
+        .bar-pct { min-width: 36px; font-size: 0.8rem; color: #999; text-align: left; }
+
+        .star-dist .bar-label { min-width: 36px; }
+        .star-dist .bar-track { height: 18px; }
+
+        .responses-list { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
+        .response-item { background: #f8f9fc; border-radius: 12px; padding: 12px 14px; font-size: 0.9rem; line-height: 1.6; border-right: 3px solid var(--green); }
+        .response-item .meta { font-size: 0.72rem; color: #bbb; margin-top: 6px; }
+        .no-data { color: #bbb; font-size: 0.9rem; text-align: center; padding: 20px; }
+
+        .loading { text-align: center; padding: 60px 20px; color: #aaa; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #eee; border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .refresh-btn { display: flex; align-items: center; gap: 8px; margin: 0 0 20px auto; padding: 10px 20px; border: none; border-radius: 12px; background: var(--green); color: white; font-family: 'Heebo', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .refresh-btn:hover { background: #65a020; transform: translateY(-1px); }
+
+        @media(max-width:480px){ .summary-card .val{font-size:1.6rem} .avg-number{font-size:2rem} }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <img src="logo.png" alt="טכנודע">
+    <div class="header-text">
+        <h1>תוצאות משוב 2 — תוכן והדרכה</h1>
+        <p>לוח בקרה מנהלים</p>
+    </div>
+</div>
+
+<div class="container">
+    <div id="mainContent">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>טוען נתונים מ-Firebase...</p>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBQ82MgwWCmMaEQQbyCKc_O2sA4i3tJ8ZI",
+    authDomain: "forme-a3c26.firebaseapp.com",
+    databaseURL: "https://forme-a3c26-default-rtdb.firebaseio.com",
+    projectId: "forme-a3c26",
+    storageBucket: "forme-a3c26.firebasestorage.app",
+    messagingSenderId: "1026375487564",
+    appId: "1:1026375487564:web:6a275bacad937a283ba4e9"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const BADGE_COLORS = ['#00B4C5','#0080C9','#6D3078','#F39200','#78B82A','#E6007E'];
+
+function starHtml(avg) {
+    return [1,2,3,4,5].map(i => `<span style="color:${i<=Math.round(avg)?'#FDC300':'#ddd'}">★</span>`).join('');
+}
+function avgRating(responses, field) {
+    const vals = responses.map(r=>r[field]).filter(v=>v!=null&&!isNaN(v));
+    return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+}
+function starDistHtml(responses, field, color) {
+    const total = responses.filter(r=>r[field]!=null).length;
+    if (!total) return '<div class="no-data">אין נתונים</div>';
+    let html = '<div class="star-dist">';
+    for (let s=5;s>=1;s--) {
+        const cnt = responses.filter(r=>r[field]==s).length;
+        const pct = Math.round(cnt/total*100);
+        html += `<div class="bar-row">
+            <div class="bar-label">${'★'.repeat(s)}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}">
+                ${cnt>0?`<span class="bar-count">${cnt}</span>`:''}
+            </div></div>
+            <div class="bar-pct">${pct}%</div>
+        </div>`;
+    }
+    return html + '</div>';
+}
+function choiceBarHtml(responses, field, color, order) {
+    const counts = {};
+    responses.forEach(r => { const v=r[field]; if(v) counts[v]=(counts[v]||0)+1; });
+    const total = Object.values(counts).reduce((a,b)=>a+b,0);
+    if (!total) return '<div class="no-data">אין נתונים</div>';
+    return order.map(opt => {
+        const cnt = counts[opt]||0;
+        const pct = total ? Math.round(cnt/total*100) : 0;
+        return `<div class="bar-row">
+            <div class="bar-label">${opt}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}">
+                ${cnt>0?`<span class="bar-count">${cnt}</span>`:''}
+            </div></div>
+            <div class="bar-pct">${pct}%</div>
+        </div>`;
+    }).join('');
+}
+
+function renderDashboard(responses) {
+    const total = responses.length;
+    const avg1 = avgRating(responses, 'q1_enjoyment');
+    const avg5 = avgRating(responses, 'q5_interesting_for_kids');
+    const texts = responses.map(r=>({text:r.q6_feedback,ts:r.timestamp})).filter(r=>r.text&&r.text.trim());
+
+    document.getElementById('mainContent').innerHTML = `
+    <button class="refresh-btn" onclick="location.reload()">↻ רענן נתונים</button>
+
+    <div class="summary-strip">
+        <div class="summary-card"><div class="val" style="color:var(--teal)">${total}</div><div class="lbl">סה"כ תגובות</div></div>
+        <div class="summary-card"><div class="val" style="color:var(--yellow)">${avg1?avg1.toFixed(1):'—'}</div><div class="lbl">ממוצע הנאה</div></div>
+        <div class="summary-card"><div class="val" style="color:var(--green)">${avg5?avg5.toFixed(1):'—'}</div><div class="lbl">ממוצע ילדים</div></div>
+        <div class="summary-card"><div class="val" style="color:var(--pink)">${texts.length}</div><div class="lbl">תגובות פתוחות</div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title"><div class="section-badge" style="background:${BADGE_COLORS[0]}">1</div><h2>עד כמה נהנית מהפעילויות / התערוכות?</h2></div>
+        ${avg1!=null?`<div class="avg-row" style="margin-bottom:16px">
+            <div class="avg-number" style="color:${BADGE_COLORS[0]}">${avg1.toFixed(1)}</div>
+            <div><div class="avg-stars">${starHtml(avg1)}</div>
+            <div class="avg-count">מתוך ${responses.filter(r=>r.q1_enjoyment).length} תגובות</div></div>
+        </div>`:'<div class="no-data">אין נתונים</div>'}
+        ${starDistHtml(responses,'q1_enjoyment',BADGE_COLORS[0])}
+    </div>
+
+    <div class="section">
+        <div class="section-title"><div class="section-badge" style="background:${BADGE_COLORS[1]}">2</div><h2>האם הפעילות תרמה להבנה / למדת משהו חדש?</h2></div>
+        ${choiceBarHtml(responses,'q2_learned_something',BADGE_COLORS[1],['מאוד','במידה מסוימת','לא כל כך','לא'])}
+    </div>
+
+    <div class="section">
+        <div class="section-title"><div class="section-badge" style="background:${BADGE_COLORS[2]}">3</div><h2>האם ההסברים של המדריך היו ברורים?</h2></div>
+        ${choiceBarHtml(responses,'q3_guide_clarity',BADGE_COLORS[2],['כן, מאוד','כן, די','חלקית','לא'])}
+    </div>
+
+    <div class="section">
+        <div class="section-title"><div class="section-badge" style="background:${BADGE_COLORS[3]}">4</div><h2>האם הפעילות תאמה את גילאי הילדים?</h2></div>
+        ${choiceBarHtml(responses,'q4_age_appropriate',BADGE_COLORS[3],['תאמה מאוד','כן, די','חלקית','לא תאמה'])}
+    </div>
+
+    <div class="section">
+        <div class="section-title"><div class="section-badge" style="background:${BADGE_COLORS[4]}">5</div><h2>עד כמה הפעילות הייתה מעניינת וברורה לילדים?</h2></div>
+        ${avg5!=null?`<div class="avg-row" style="margin-bottom:16px">
+            <div class="avg-number" style="color:${BADGE_COLORS[4]}">${avg5.toFixed(1)}</div>
+            <div><div class="avg-stars">${starHtml(avg5)}</div>
+            <div class="avg-count">מתוך ${responses.filter(r=>r.q5_interesting_for_kids).length} תגובות</div></div>
+        </div>`:'<div class="no-data">אין נתונים</div>'}
+        ${starDistHtml(responses,'q5_interesting_for_kids',BADGE_COLORS[4])}
+    </div>
+
+    <div class="section">
+        <div class="section-title"><div class="section-badge" style="background:${BADGE_COLORS[5]}">6</div><h2>מה הכי אהבת? מה לשפר? — תגובות פתוחות (${texts.length})</h2></div>
+        ${texts.length?`<div class="responses-list">${texts.map(r=>`
+            <div class="response-item">${r.text}<div class="meta">${r.ts?new Date(r.ts).toLocaleString('he-IL'):''}</div></div>`).join('')}</div>`
+        :'<div class="no-data">אין תגובות פתוחות עדיין</div>'}
+    </div>`;
+}
+
+onValue(ref(db,'mevakrim/mashov2'), snapshot => {
+    const data = snapshot.val();
+    if (!data) { document.getElementById('mainContent').innerHTML='<div class="loading"><p>אין תגובות עדיין.</p></div>'; return; }
+    renderDashboard(Object.values(data));
+}, err => {
+    document.getElementById('mainContent').innerHTML=`<div class="loading"><p>שגיאה: ${err.message}</p></div>`;
+});
+</script>
+</body>
+</html>
