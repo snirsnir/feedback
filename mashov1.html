@@ -7,794 +7,235 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --pink: #E6007E;
-            --teal: #00B4C5;
-            --orange: #F39200;
-            --purple: #6D3078;
-            --blue: #0080C9;
-            --green: #78B82A;
-            --yellow: #FDC300;
-            --dark: #122231;
-            --light-bg: #f8f9fc;
-            --card-bg: #ffffff;
+            --pink: #E6007E; --teal: #00B4C5; --orange: #F39200;
+            --purple: #6D3078; --blue: #0080C9; --green: #78B82A;
+            --yellow: #FDC300; --dark: #122231;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Heebo', sans-serif; background: #f8f9fc; color: var(--dark); min-height: 100vh; overflow-x: hidden; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* Background logo */
+        .bg-logo { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92vmin; height: 92vmin; z-index: 0; pointer-events: none; opacity: 0.28; }
+        .bg-logo svg { width: 100%; height: 100%; }
+        .bg-logo .logo-part { transition: fill 0.8s ease; }
 
-        body {
-            font-family: 'Heebo', sans-serif;
-            background: var(--light-bg);
-            color: var(--dark);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Background logo shape */
-        .bg-logo {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 92vmin;
-            height: 92vmin;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.30;
-        }
-
-        .bg-logo svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .bg-logo .logo-part {
-            transition: fill 0.7s ease;
-        }
-
-        /* Main container */
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 20px 16px 40px;
-        }
+        .container { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 20px 16px 48px; }
 
         /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-            animation: slideDown 0.6s ease-out;
-        }
+        .header { text-align: center; margin-bottom: 28px; animation: fadeUp 0.6s ease-out; }
+        .header .logo { width: 90px; margin-bottom: 12px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1)); }
+        .header h1 { font-size: 1.5rem; font-weight: 900; background: linear-gradient(135deg, var(--pink), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px; }
+        .header .subtitle { font-size: 0.85rem; color: #888; font-weight: 300; }
 
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* Intro */
+        .intro-card { background: linear-gradient(135deg, var(--teal), var(--blue)); color: white; border-radius: 20px; padding: 22px 20px; margin-bottom: 20px; text-align: center; position: relative; overflow: hidden; animation: fadeUp 0.6s ease-out 0.1s both; }
+        .intro-card::before { content:''; position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:rgba(255,255,255,0.1); border-radius:50%; }
+        .intro-card .emoji { font-size: 1.8rem; margin-bottom: 6px; animation: bounce 2s ease-in-out infinite; }
+        .intro-card p { font-size: 0.9rem; line-height: 1.6; position: relative; z-index: 1; }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
 
-        .header .logo {
-            width: 90px;
-            height: auto;
-            margin-bottom: 12px;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
-        }
+        /* Question cards */
+        .question-card { background: rgba(255,255,255,0.93); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 20px; padding: 22px 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 14px; animation: fadeUp 0.5s ease-out both; transition: box-shadow 0.3s; }
+        .question-card.error { box-shadow: 0 4px 20px rgba(230,0,126,0.25); border: 2px solid var(--pink); }
 
-        .header h1 {
-            font-size: 1.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--pink), var(--purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 4px;
-        }
+        .question-card:nth-child(1) { animation-delay: 0.15s; }
+        .question-card:nth-child(2) { animation-delay: 0.22s; }
+        .question-card:nth-child(3) { animation-delay: 0.29s; }
+        .question-card:nth-child(4) { animation-delay: 0.36s; }
+        .question-card:nth-child(5) { animation-delay: 0.43s; }
+        .question-card:nth-child(6) { animation-delay: 0.50s; }
 
-        .header .subtitle {
-            font-size: 0.85rem;
-            color: #888;
-            font-weight: 300;
-        }
-
-        /* Progress bar */
-        .progress-wrapper {
-            margin-bottom: 24px;
-            animation: slideDown 0.6s ease-out 0.1s both;
-        }
-
-        .progress-bar {
-            height: 6px;
-            background: #e8e8e8;
-            border-radius: 3px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--teal), var(--blue), var(--purple), var(--pink));
-            background-size: 300% 100%;
-            border-radius: 3px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: shimmer 3s ease-in-out infinite;
-            width: 0%;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .progress-text {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 6px;
-            font-size: 0.75rem;
-            color: #aaa;
-        }
-
-        /* Intro card */
-        .intro-card {
-            background: linear-gradient(135deg, var(--teal), var(--blue));
-            color: white;
-            border-radius: 20px;
-            padding: 24px 20px;
-            margin-bottom: 24px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            animation: fadeUp 0.6s ease-out 0.2s both;
-        }
-
-        .intro-card::before {
-            content: '';
-            position: absolute;
-            top: -30px;
-            right: -30px;
-            width: 100px;
-            height: 100px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-        }
-
-        .intro-card::after {
-            content: '';
-            position: absolute;
-            bottom: -20px;
-            left: -20px;
-            width: 70px;
-            height: 70px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 50%;
-        }
-
-        .intro-card .emoji {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .intro-card p {
-            font-size: 0.95rem;
-            font-weight: 400;
-            line-height: 1.6;
-            position: relative;
-            z-index: 1;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Question slides */
-        .question-slide {
-            display: none;
-            animation: fadeUp 0.4s ease-out;
-        }
-
-        .question-slide.active {
-            display: block;
-        }
-
-        /* Question card */
-        .question-card {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 24px 20px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-            margin-bottom: 16px;
-        }
-
-        .question-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 12px;
-        }
-
-        .q-color-1 { background: var(--teal); }
-        .q-color-2 { background: var(--blue); }
-        .q-color-3 { background: var(--purple); }
-        .q-color-4 { background: var(--orange); }
-        .q-color-5 { background: var(--green); }
-        .q-color-6 { background: var(--pink); }
-
-        .question-card h2 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: var(--dark);
-        }
+        .question-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
+        .q-badge { width: 28px; height: 28px; border-radius: 50%; color: white; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .q-badge-1{background:var(--teal)} .q-badge-2{background:var(--blue)} .q-badge-3{background:var(--purple)} .q-badge-4{background:var(--orange)} .q-badge-5{background:var(--green)} .q-badge-6{background:var(--pink)}
+        .question-card h2 { font-size: 1rem; font-weight: 700; line-height: 1.55; color: var(--dark); }
 
         /* Star rating */
-        .star-rating {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            direction: rtl;
-        }
+        .star-rating { display: flex; justify-content: center; gap: 6px; direction: rtl; margin-top: 4px; }
+        .star { font-size: 2.4rem; cursor: pointer; transition: all 0.18s ease; color: #ddd; -webkit-tap-highlight-color: transparent; user-select: none; }
+        .star:hover, .star.hovered { transform: scale(1.2); }
+        .star.active { animation: starPop 0.3s ease-out; }
+        @keyframes starPop { 0%{transform:scale(1)} 50%{transform:scale(1.35)} 100%{transform:scale(1.1)} }
+        .star-label { text-align: center; margin-top: 8px; font-size: 0.82rem; color: #aaa; min-height: 18px; transition: color 0.2s; }
+        .star-label.visible { color: var(--dark); font-weight: 600; }
 
-        .star-rating .star {
-            font-size: 2.5rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: #ddd;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        .star-rating .star:hover,
-        .star-rating .star.hovered {
-            transform: scale(1.2);
-        }
-
-        .star-rating .star.active {
-            animation: starPop 0.3s ease-out;
-        }
-
-        @keyframes starPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.4); }
-            100% { transform: scale(1.1); }
-        }
-
-        .star-label {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 0.85rem;
-            color: #999;
-            min-height: 20px;
-            transition: all 0.2s ease;
-        }
-
-        .star-label.visible {
-            color: var(--dark);
-            font-weight: 500;
-        }
-
-        /* Multiple choice options */
-        .option-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .option-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 18px;
-            border: 2px solid #eee;
-            border-radius: 14px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            font-family: 'Heebo', sans-serif;
-            font-size: 0.95rem;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .option-btn:active {
-            transform: scale(0.97);
-        }
-
-        .option-btn .circle {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            border: 2px solid #ddd;
-            transition: all 0.25s ease;
-            flex-shrink: 0;
-            position: relative;
-        }
-
-        .option-btn.selected {
-            border-color: var(--teal);
-            background: rgba(0, 180, 197, 0.05);
-        }
-
-        .option-btn.selected .circle {
-            border-color: var(--teal);
-            background: var(--teal);
-        }
-
-        .option-btn.selected .circle::after {
-            content: '\2713';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
+        /* Multiple choice */
+        .option-group { display: flex; flex-direction: column; gap: 8px; }
+        .option-btn { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 2px solid #eee; border-radius: 12px; background: white; cursor: pointer; transition: all 0.22s; font-family: 'Heebo', sans-serif; font-size: 0.92rem; -webkit-tap-highlight-color: transparent; width: 100%; text-align: right; }
+        .option-btn:active { transform: scale(0.97); }
+        .circle { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ddd; transition: all 0.22s; flex-shrink: 0; position: relative; }
+        .option-btn.selected { border-color: var(--teal); background: rgba(0,180,197,0.05); }
+        .option-btn.selected .circle { border-color: var(--teal); background: var(--teal); }
+        .option-btn.selected .circle::after { content:'\2713'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white; font-size:0.65rem; font-weight:bold; }
 
         /* Textarea */
-        .text-input {
-            width: 100%;
-            min-height: 120px;
-            padding: 16px;
-            border: 2px solid #eee;
-            border-radius: 14px;
-            font-family: 'Heebo', sans-serif;
-            font-size: 0.95rem;
-            resize: vertical;
-            transition: border-color 0.3s ease;
-            outline: none;
-            line-height: 1.6;
-        }
+        .text-input { width: 100%; min-height: 110px; padding: 14px; border: 2px solid #eee; border-radius: 12px; font-family: 'Heebo', sans-serif; font-size: 0.92rem; resize: vertical; outline: none; line-height: 1.6; transition: border-color 0.3s; }
+        .text-input:focus { border-color: var(--teal); }
+        .text-input::placeholder { color: #ccc; }
+        .char-count { text-align: left; font-size: 0.72rem; color: #bbb; margin-top: 5px; }
 
-        .text-input:focus {
-            border-color: var(--teal);
-        }
+        /* Submit */
+        .submit-area { margin-top: 8px; animation: fadeUp 0.5s ease-out 0.55s both; }
+        .error-msg { color: var(--pink); font-size: 0.85rem; text-align: center; margin-bottom: 12px; display: none; animation: shake 0.4s ease; }
+        .error-msg.show { display: block; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+        .btn-submit { width: 100%; padding: 16px; border: none; border-radius: 16px; font-family: 'Heebo', sans-serif; font-size: 1.1rem; font-weight: 900; cursor: pointer; background: linear-gradient(135deg, var(--pink), var(--purple)); color: white; box-shadow: 0 6px 20px rgba(230,0,126,0.35); transition: all 0.25s; -webkit-tap-highlight-color: transparent; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(230,0,126,0.45); }
+        .btn-submit:active { transform: scale(0.97); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        .text-input::placeholder {
-            color: #ccc;
-        }
+        /* Thank you */
+        .thank-you { display: none; text-align: center; padding: 50px 20px; animation: fadeUp 0.6s ease-out; }
+        .thank-you.active { display: block; }
+        .thank-you .big-emoji { font-size: 4rem; margin-bottom: 16px; animation: bounce 1.5s ease-in-out infinite; }
+        .thank-you h2 { font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--teal), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; }
+        .thank-you p { font-size: 1rem; color: #888; line-height: 1.7; }
+        .heart { display: inline-block; animation: heartbeat 1.2s ease-in-out infinite; }
+        @keyframes heartbeat { 0%,100%{transform:scale(1)} 15%{transform:scale(1.15)} 30%{transform:scale(1)} 45%{transform:scale(1.1)} }
 
-        .char-count {
-            text-align: left;
-            font-size: 0.75rem;
-            color: #bbb;
-            margin-top: 6px;
-        }
+        .confetti-piece { position: fixed; z-index: 100; border-radius: 2px; animation: confettiFall linear forwards; pointer-events: none; }
+        @keyframes confettiFall { 0%{opacity:1;transform:translateY(0) rotate(0deg)} 100%{opacity:0;transform:translateY(100vh) rotate(720deg)} }
 
-        /* Navigation buttons */
-        .nav-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 8px;
-        }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
 
-        .btn {
-            flex: 1;
-            padding: 14px 20px;
-            border: none;
-            border-radius: 14px;
-            font-family: 'Heebo', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .btn:active {
-            transform: scale(0.96);
-        }
-
-        .btn-next {
-            background: linear-gradient(135deg, var(--pink), var(--purple));
-            color: white;
-            box-shadow: 0 4px 16px rgba(230, 0, 126, 0.3);
-        }
-
-        .btn-next:hover {
-            box-shadow: 0 6px 24px rgba(230, 0, 126, 0.4);
-            transform: translateY(-1px);
-        }
-
-        .btn-next:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-
-        .btn-back {
-            background: #f0f0f0;
-            color: #888;
-            flex: 0.5;
-        }
-
-        .btn-back:hover {
-            background: #e4e4e4;
-        }
-
-        .btn-submit {
-            background: linear-gradient(135deg, var(--teal), var(--green));
-            color: white;
-            box-shadow: 0 4px 16px rgba(0, 180, 197, 0.3);
-        }
-
-        .btn-submit:hover {
-            box-shadow: 0 6px 24px rgba(0, 180, 197, 0.4);
-            transform: translateY(-1px);
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-
-        /* Thank you screen */
-        .thank-you {
-            display: none;
-            text-align: center;
-            padding: 40px 20px;
-            animation: fadeUp 0.6s ease-out;
-        }
-
-        .thank-you.active {
-            display: block;
-        }
-
-        .thank-you .confetti-wrapper {
-            font-size: 3.5rem;
-            margin-bottom: 16px;
-            animation: bounce 1.5s ease-in-out infinite;
-        }
-
-        .thank-you h2 {
-            font-size: 1.8rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--teal), var(--blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 12px;
-        }
-
-        .thank-you p {
-            font-size: 1rem;
-            color: #888;
-            line-height: 1.7;
-        }
-
-        .thank-you .heart {
-            display: inline-block;
-            animation: heartbeat 1.2s ease-in-out infinite;
-        }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.15); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.1); }
-        }
-
-        /* Confetti animation */
-        .confetti-piece {
-            position: fixed;
-            z-index: 100;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-            animation: confettiFall linear forwards;
-            pointer-events: none;
-        }
-
-        @keyframes confettiFall {
-            0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
-            100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scale(0.5); }
-        }
-
-        /* Slide transitions */
-        .slide-exit {
-            animation: slideOut 0.3s ease-in forwards;
-        }
-
-        @keyframes slideOut {
-            to { opacity: 0; transform: translateX(50px); }
-        }
-
-        .slide-enter {
-            animation: slideIn 0.3s ease-out forwards;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .slide-enter-back {
-            animation: slideInBack 0.3s ease-out forwards;
-        }
-
-        @keyframes slideInBack {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Responsive fine-tuning */
-        @media (max-width: 380px) {
-            .star-rating .star { font-size: 2rem; }
-            .question-card h2 { font-size: 0.95rem; }
-        }
-
-        /* Ripple effect for buttons */
-        .ripple {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ripple::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.3) 10%, transparent 10%);
-            background-repeat: no-repeat;
-            background-position: 50%;
-            transform: scale(10, 10);
-            opacity: 0;
-            transition: transform 0.4s, opacity 0.6s;
-        }
-
-        .ripple:active::after {
-            transform: scale(0, 0);
-            opacity: 0.3;
-            transition: 0s;
-        }
+        @media(max-width:380px){ .star{font-size:2rem} .question-card h2{font-size:0.92rem} }
     </style>
 </head>
 <body>
 
-    <!-- Background: Technoda logo shape with dynamic colors -->
     <div class="bg-logo" id="bgLogo">
-        <!--
-            All pills use: transform="translate(cx,cy) rotate(angle)"
-            with rect centered at origin: x="-halfW" y="-halfH"
-            Positive rotate = clockwise = bottom leans LEFT
-            viewBox 0 0 200 210
-        -->
         <svg viewBox="0 0 220 215" xmlns="http://www.w3.org/2000/svg">
-            <!-- Head — small circle, top center -->
             <circle class="logo-part" id="lp-head" cx="110" cy="18" r="10"/>
-
-            <!-- Left arm: center(82,60), rotate(-42°) → top goes upper-left, bottom near center -->
-            <rect class="logo-part" id="lp-arm-l"
-                  x="-8" y="-36" width="16" height="72" rx="8"
-                  transform="translate(82,60) rotate(-42)"/>
-
-            <!-- Right arm: mirror -->
-            <rect class="logo-part" id="lp-arm-r"
-                  x="-8" y="-36" width="16" height="72" rx="8"
-                  transform="translate(138,60) rotate(42)"/>
-
-            <!-- Left horizontal bar — wider, further left -->
-            <rect class="logo-part" id="lp-hand-l"
-                  x="-32" y="-8" width="64" height="16" rx="8"
-                  transform="translate(48,102)"/>
-
-            <!-- Right horizontal bar — mirror -->
-            <rect class="logo-part" id="lp-hand-r"
-                  x="-32" y="-8" width="64" height="16" rx="8"
-                  transform="translate(172,102)"/>
-
-            <!-- Left leg: spread further apart, more angle -->
-            <rect class="logo-part" id="lp-leg-l"
-                  x="-8" y="-46" width="16" height="92" rx="8"
-                  transform="translate(82,157) rotate(32)"/>
-
-            <!-- Right leg: mirror -->
-            <rect class="logo-part" id="lp-leg-r"
-                  x="-8" y="-46" width="16" height="92" rx="8"
-                  transform="translate(138,157) rotate(-32)"/>
+            <rect class="logo-part" id="lp-arm-l" x="-8" y="-36" width="16" height="72" rx="8" transform="translate(82,60) rotate(-42)"/>
+            <rect class="logo-part" id="lp-arm-r" x="-8" y="-36" width="16" height="72" rx="8" transform="translate(138,60) rotate(42)"/>
+            <rect class="logo-part" id="lp-hand-l" x="-32" y="-8" width="64" height="16" rx="8" transform="translate(48,102)"/>
+            <rect class="logo-part" id="lp-hand-r" x="-32" y="-8" width="64" height="16" rx="8" transform="translate(172,102)"/>
+            <rect class="logo-part" id="lp-leg-l" x="-8" y="-46" width="16" height="92" rx="8" transform="translate(82,157) rotate(32)"/>
+            <rect class="logo-part" id="lp-leg-r" x="-8" y="-46" width="16" height="92" rx="8" transform="translate(138,157) rotate(-32)"/>
         </svg>
     </div>
 
     <div class="container">
-        <!-- Header -->
+
         <div class="header">
             <img src="logo.png" alt="טכנודע" class="logo">
             <h1>משוב — חוויית לקוח</h1>
             <div class="subtitle">תהליך רכישה + חוויית לקוח</div>
         </div>
 
-        <!-- Progress -->
-        <div class="progress-wrapper" id="progressWrapper">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="progress-text">
-                <span id="progressLabel">שאלה 1 מתוך 6</span>
-                <span id="progressPercent">0%</span>
-            </div>
-        </div>
-
-        <!-- Intro -->
-        <div class="intro-card" id="introCard">
+        <div class="intro-card">
             <div class="emoji">💬</div>
-            <p>דעתך חשובה לנו!<br>נשמח למשוב קצר על תהליך ההזמנה והשירות שקיבלת.<br>ייקח פחות מדקה 🙏</p>
+            <p>דעתך חשובה לנו!<br>נשמח למשוב קצר על תהליך ההזמנה והשירות שקיבלת.</p>
         </div>
 
-        <!-- Questions -->
-        <div id="questionsContainer">
+        <div id="formArea">
 
-            <!-- Q1: Rating 1-5 -->
-            <div class="question-slide active" data-question="1">
-                <div class="question-card">
-                    <div class="question-number q-color-1">1</div>
+            <!-- Q1 -->
+            <div class="question-card" id="card-q1">
+                <div class="question-header">
+                    <div class="q-badge q-badge-1">1</div>
                     <h2>עד כמה תהליך רכישת הכרטיסים היה פשוט וברור?</h2>
-                    <div class="star-rating" data-name="q1">
-                        <span class="star" data-value="1">★</span>
-                        <span class="star" data-value="2">★</span>
-                        <span class="star" data-value="3">★</span>
-                        <span class="star" data-value="4">★</span>
-                        <span class="star" data-value="5">★</span>
-                    </div>
-                    <div class="star-label" id="label-q1"></div>
                 </div>
-                <div class="nav-buttons">
-                    <button class="btn btn-next ripple" onclick="nextSlide()" id="nextBtn1" disabled>הבא ←</button>
+                <div class="star-rating" data-name="q1">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
                 </div>
+                <div class="star-label" id="label-q1"></div>
             </div>
 
-            <!-- Q2: Rating 1-5 -->
-            <div class="question-slide" data-question="2">
-                <div class="question-card">
-                    <div class="question-number q-color-2">2</div>
+            <!-- Q2 -->
+            <div class="question-card" id="card-q2">
+                <div class="question-header">
+                    <div class="q-badge q-badge-2">2</div>
                     <h2>עד כמה הפעילות תאמה למה שהובטח בעת ההזמנה והמידע המקדים היה מדויק?</h2>
-                    <div class="star-rating" data-name="q2">
-                        <span class="star" data-value="1">★</span>
-                        <span class="star" data-value="2">★</span>
-                        <span class="star" data-value="3">★</span>
-                        <span class="star" data-value="4">★</span>
-                        <span class="star" data-value="5">★</span>
-                    </div>
-                    <div class="star-label" id="label-q2"></div>
                 </div>
-                <div class="nav-buttons">
-                    <button class="btn btn-back" onclick="prevSlide()">→ חזרה</button>
-                    <button class="btn btn-next ripple" onclick="nextSlide()" id="nextBtn2" disabled>הבא ←</button>
+                <div class="star-rating" data-name="q2">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
                 </div>
+                <div class="star-label" id="label-q2"></div>
             </div>
 
-            <!-- Q3: Multiple choice -->
-            <div class="question-slide" data-question="3">
-                <div class="question-card">
-                    <div class="question-number q-color-3">3</div>
+            <!-- Q3 -->
+            <div class="question-card" id="card-q3">
+                <div class="question-header">
+                    <div class="q-badge q-badge-3">3</div>
                     <h2>איך היית מתאר את חוויית השירות שקיבלת לפני ההגעה ובהגעה למקום?</h2>
-                    <div class="option-group" data-name="q3">
-                        <button class="option-btn" data-value="מצוינת" onclick="selectOption(this)">
-                            <span class="circle"></span>
-                            <span>מצוינת 🌟</span>
-                        </button>
-                        <button class="option-btn" data-value="טובה" onclick="selectOption(this)">
-                            <span class="circle"></span>
-                            <span>טובה 👍</span>
-                        </button>
-                        <button class="option-btn" data-value="סבירה" onclick="selectOption(this)">
-                            <span class="circle"></span>
-                            <span>סבירה 🤔</span>
-                        </button>
-                        <button class="option-btn" data-value="טעונה שיפור" onclick="selectOption(this)">
-                            <span class="circle"></span>
-                            <span>טעונה שיפור 📝</span>
-                        </button>
-                    </div>
                 </div>
-                <div class="nav-buttons">
-                    <button class="btn btn-back" onclick="prevSlide()">→ חזרה</button>
-                    <button class="btn btn-next ripple" onclick="nextSlide()" id="nextBtn3" disabled>הבא ←</button>
+                <div class="option-group" data-name="q3">
+                    <button class="option-btn" data-value="מצוינת" onclick="selectOption(this)"><span class="circle"></span><span>מצוינת 🌟</span></button>
+                    <button class="option-btn" data-value="טובה" onclick="selectOption(this)"><span class="circle"></span><span>טובה 👍</span></button>
+                    <button class="option-btn" data-value="סבירה" onclick="selectOption(this)"><span class="circle"></span><span>סבירה 🤔</span></button>
+                    <button class="option-btn" data-value="טעונה שיפור" onclick="selectOption(this)"><span class="circle"></span><span>טעונה שיפור 📝</span></button>
                 </div>
             </div>
 
-            <!-- Q4: Multiple choice -->
-            <div class="question-slide" data-question="4">
-                <div class="question-card">
-                    <div class="question-number q-color-4">4</div>
-                    <h2>עד כמה ההתמצאות במקום הייתה נוחה וברורה?</h2>
-                    <p style="font-size: 0.82rem; color: #aaa; margin: -12px 0 16px;">(הגעה לטכנודע, שילוט והכוונה, עמדת מודיעין)</p>
-                    <div class="option-group" data-name="q4">
-                        <button class="option-btn" data-value="מצוינת" onclick="selectOption(this)">
-                            <span class="circle"></span>
-                            <span>מצוינת 🌟</span>
-                        </button>
-                        <button class="option-btn" data-value="טובה" onclick="selectOption(this)">
-                            <span class="circle"></span>
-                            <span>טובה 👍</span>
-                        </button>
-                        <button class="option-btn" data-value="סבירה" onclick="selectOption(this)">
-                            <span class="circle"></span>
-                            <span>סבירה 🤔</span>
-                        </button>
-                        <button class="option-btn" data-value="טעונה שיפור" onclick="selectOption(this)">
-                            <span class="circle"></span>
-                            <span>טעונה שיפור 📝</span>
-                        </button>
-                    </div>
+            <!-- Q4 -->
+            <div class="question-card" id="card-q4">
+                <div class="question-header">
+                    <div class="q-badge q-badge-4">4</div>
+                    <h2>עד כמה ההתמצאות במקום הייתה נוחה וברורה?<br><small style="font-weight:400;color:#aaa;font-size:0.8rem">(הגעה לטכנודע, שילוט והכוונה, עמדת מודיעין)</small></h2>
                 </div>
-                <div class="nav-buttons">
-                    <button class="btn btn-back" onclick="prevSlide()">→ חזרה</button>
-                    <button class="btn btn-next ripple" onclick="nextSlide()" id="nextBtn4" disabled>הבא ←</button>
+                <div class="option-group" data-name="q4">
+                    <button class="option-btn" data-value="מצוינת" onclick="selectOption(this)"><span class="circle"></span><span>מצוינת 🌟</span></button>
+                    <button class="option-btn" data-value="טובה" onclick="selectOption(this)"><span class="circle"></span><span>טובה 👍</span></button>
+                    <button class="option-btn" data-value="סבירה" onclick="selectOption(this)"><span class="circle"></span><span>סבירה 🤔</span></button>
+                    <button class="option-btn" data-value="טעונה שיפור" onclick="selectOption(this)"><span class="circle"></span><span>טעונה שיפור 📝</span></button>
                 </div>
             </div>
 
-            <!-- Q5: Rating 1-5 -->
-            <div class="question-slide" data-question="5">
-                <div class="question-card">
-                    <div class="question-number q-color-5">5</div>
+            <!-- Q5 -->
+            <div class="question-card" id="card-q5">
+                <div class="question-header">
+                    <div class="q-badge q-badge-5">5</div>
                     <h2>עד כמה השירותים ורמת הניקיון באזורים הציבוריים ואזורי הפעילות היו ברמה מספקת?</h2>
-                    <div class="star-rating" data-name="q5">
-                        <span class="star" data-value="1">★</span>
-                        <span class="star" data-value="2">★</span>
-                        <span class="star" data-value="3">★</span>
-                        <span class="star" data-value="4">★</span>
-                        <span class="star" data-value="5">★</span>
-                    </div>
-                    <div class="star-label" id="label-q5"></div>
                 </div>
-                <div class="nav-buttons">
-                    <button class="btn btn-back" onclick="prevSlide()">→ חזרה</button>
-                    <button class="btn btn-next ripple" onclick="nextSlide()" id="nextBtn5" disabled>הבא ←</button>
+                <div class="star-rating" data-name="q5">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
                 </div>
+                <div class="star-label" id="label-q5"></div>
             </div>
 
-            <!-- Q6: Open text -->
-            <div class="question-slide" data-question="6">
-                <div class="question-card">
-                    <div class="question-number q-color-6">6</div>
+            <!-- Q6 -->
+            <div class="question-card" id="card-q6">
+                <div class="question-header">
+                    <div class="q-badge q-badge-6">6</div>
                     <h2>מה ניתן לשפר בתהליך הרכישה או השירות?</h2>
-                    <textarea class="text-input" data-name="q6" placeholder="נשמח לשמוע את דעתך..." maxlength="500" oninput="updateCharCount(this)"></textarea>
-                    <div class="char-count"><span id="charCount">0</span> / 500</div>
                 </div>
-                <div class="nav-buttons">
-                    <button class="btn btn-back" onclick="prevSlide()">→ חזרה</button>
-                    <button class="btn btn-submit ripple" onclick="submitForm()">שליחת המשוב ✨</button>
-                </div>
+                <textarea class="text-input" id="q6-text" placeholder="נשמח לשמוע את דעתך... (לא חובה)" maxlength="500" oninput="document.getElementById('charCount').textContent=this.value.length"></textarea>
+                <div class="char-count"><span id="charCount">0</span> / 500</div>
             </div>
+
+            <div class="submit-area">
+                <div class="error-msg" id="errorMsg">נא לענות על כל השאלות המסומנות</div>
+                <button class="btn-submit" onclick="submitForm()">שליחת המשוב ✨</button>
+            </div>
+
         </div>
 
-        <!-- Thank You -->
         <div class="thank-you" id="thankYou">
-            <div class="confetti-wrapper">🎉</div>
+            <div class="big-emoji">🎉</div>
             <h2>תודה רבה!</h2>
             <p>המשוב שלך התקבל בהצלחה.<br>אנחנו בטכנודע עובדים כל הזמן להשתפר,<br>והמשוב שלך עוזר לנו מאוד <span class="heart">❤️</span></p>
         </div>
+
     </div>
 
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
-
-        const firebaseConfig = {
+        const app = initializeApp({
             apiKey: "AIzaSyBQ82MgwWCmMaEQQbyCKc_O2sA4i3tJ8ZI",
             authDomain: "forme-a3c26.firebaseapp.com",
             databaseURL: "https://forme-a3c26-default-rtdb.firebaseio.com",
@@ -802,266 +243,120 @@
             storageBucket: "forme-a3c26.firebasestorage.app",
             messagingSenderId: "1026375487564",
             appId: "1:1026375487564:web:6a275bacad937a283ba4e9"
-        };
-
-        const app = initializeApp(firebaseConfig);
+        });
         const db = getDatabase(app);
-
-        // Expose submitToFirebase globally
-        window.submitToFirebase = async function(data) {
-            try {
-                await push(ref(db, 'mevakrim/mashov1'), data);
-                return true;
-            } catch (error) {
-                console.error('Firebase error:', error);
-                return false;
-            }
+        window.submitToFirebase = async (data) => {
+            try { await push(ref(db, 'mevakrim/mashov1'), data); return true; }
+            catch(e) { console.error(e); return false; }
         };
     </script>
 
     <script>
-        // Logo parts IDs in order
-        const logoParts = ['lp-head', 'lp-arm-l', 'lp-arm-r', 'lp-hand-l', 'lp-hand-r', 'lp-leg-l', 'lp-leg-r'];
-        const logoColors = ['#00B4C5', '#0080C9', '#78B82A', '#6D3078', '#FDC300', '#E6007E', '#F39200'];
-
-        // Color themes per slide — each shuffles the 7 logo colors across the 7 parts
-        const slideColorThemes = [
-            ['#00B4C5', '#0080C9', '#78B82A', '#6D3078', '#FDC300', '#E6007E', '#F39200'], // original
-            ['#E6007E', '#F39200', '#00B4C5', '#FDC300', '#78B82A', '#6D3078', '#0080C9'], // shift 1
-            ['#78B82A', '#6D3078', '#FDC300', '#E6007E', '#0080C9', '#F39200', '#00B4C5'], // shift 2
-            ['#F39200', '#00B4C5', '#E6007E', '#0080C9', '#6D3078', '#FDC300', '#78B82A'], // shift 3
-            ['#FDC300', '#E6007E', '#6D3078', '#78B82A', '#F39200', '#00B4C5', '#0080C9'], // shift 4
-            ['#0080C9', '#78B82A', '#F39200', '#00B4C5', '#E6007E', '#FDC300', '#6D3078'], // shift 5
-        ];
-
-        function updateLogoColors(slideIndex) {
-            const colors = slideColorThemes[slideIndex - 1] || slideColorThemes[0];
-            logoParts.forEach((id, i) => {
-                const el = document.getElementById(id);
-                if (el) el.style.fill = colors[i]; // style.fill triggers CSS transition
-            });
-        }
-
-        // State
-        let currentSlide = 1;
-        const totalSlides = 6;
         const answers = {};
-        const starLabels = {
-            1: 'בכלל לא',
-            2: 'מעט',
-            3: 'בינוני',
-            4: 'טוב מאוד',
-            5: 'מצוין!'
-        };
-        const starColors = {
-            1: '#EF5350',
-            2: '#FF7043',
-            3: '#FFA726',
-            4: '#66BB6A',
-            5: '#26A69A'
-        };
+        const starColors = {1:'#EF5350',2:'#FF7043',3:'#FFA726',4:'#66BB6A',5:'#26A69A'};
+        const starLabels = {1:'בכלל לא',2:'מעט',3:'בינוני',4:'טוב מאוד',5:'מצוין!'};
 
-        // Star rating setup
+        // Star ratings
         document.querySelectorAll('.star-rating').forEach(group => {
             const name = group.dataset.name;
             const stars = group.querySelectorAll('.star');
             const label = document.getElementById('label-' + name);
-
             stars.forEach(star => {
                 star.addEventListener('click', () => {
                     const val = parseInt(star.dataset.value);
                     answers[name] = val;
-
                     stars.forEach(s => {
                         const v = parseInt(s.dataset.value);
-                        if (v <= val) {
-                            s.style.color = starColors[val];
-                            s.classList.add('active');
-                        } else {
-                            s.style.color = '#ddd';
-                            s.classList.remove('active');
-                        }
+                        s.style.color = v <= val ? starColors[val] : '#ddd';
                     });
-
-                    if (label) {
-                        label.textContent = starLabels[val];
-                        label.classList.add('visible');
-                    }
-
-                    enableNextButton();
+                    label.textContent = starLabels[val];
+                    label.classList.add('visible');
+                    document.getElementById('card-' + name)?.classList.remove('error');
                 });
-
-                // Hover effect
                 star.addEventListener('mouseenter', () => {
                     const val = parseInt(star.dataset.value);
-                    stars.forEach(s => {
-                        if (parseInt(s.dataset.value) <= val) {
-                            s.classList.add('hovered');
-                        }
-                    });
+                    stars.forEach(s => { if(parseInt(s.dataset.value) <= val) s.classList.add('hovered'); });
                 });
-
-                star.addEventListener('mouseleave', () => {
-                    stars.forEach(s => s.classList.remove('hovered'));
-                });
+                star.addEventListener('mouseleave', () => stars.forEach(s => s.classList.remove('hovered')));
             });
         });
 
-        // Option selection
+        // Multiple choice
         function selectOption(btn) {
             const group = btn.closest('.option-group');
-            const name = group.dataset.name;
-
             group.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
-            answers[name] = btn.dataset.value;
-
-            enableNextButton();
+            answers[group.dataset.name] = btn.dataset.value;
+            const cardId = 'card-' + group.dataset.name;
+            document.getElementById(cardId)?.classList.remove('error');
         }
 
-        // Enable next button
-        function enableNextButton() {
-            const qName = 'q' + currentSlide;
-            const btn = document.getElementById('nextBtn' + currentSlide);
-            if (btn && answers[qName]) {
-                btn.disabled = false;
-            }
+        // Logo color cycling
+        const logoParts = ['lp-head','lp-arm-l','lp-arm-r','lp-hand-l','lp-hand-r','lp-leg-l','lp-leg-r'];
+        const colorThemes = [
+            ['#00B4C5','#0080C9','#78B82A','#6D3078','#FDC300','#E6007E','#F39200'],
+            ['#E6007E','#F39200','#00B4C5','#FDC300','#78B82A','#6D3078','#0080C9'],
+            ['#78B82A','#6D3078','#FDC300','#E6007E','#0080C9','#F39200','#00B4C5'],
+            ['#F39200','#00B4C5','#E6007E','#0080C9','#6D3078','#FDC300','#78B82A'],
+            ['#FDC300','#E6007E','#6D3078','#78B82A','#F39200','#00B4C5','#0080C9'],
+            ['#0080C9','#78B82A','#F39200','#00B4C5','#E6007E','#FDC300','#6D3078'],
+        ];
+        let themeIdx = 0;
+        function cycleLogoColors() {
+            const c = colorThemes[themeIdx % colorThemes.length];
+            logoParts.forEach((id,i) => { const el=document.getElementById(id); if(el) el.style.fill=c[i]; });
+            themeIdx++;
         }
-
-        // Navigation
-        function nextSlide() {
-            if (currentSlide >= totalSlides) return;
-
-            const current = document.querySelector(`.question-slide[data-question="${currentSlide}"]`);
-            current.classList.add('slide-exit');
-
-            setTimeout(() => {
-                current.classList.remove('active', 'slide-exit');
-                currentSlide++;
-                const next = document.querySelector(`.question-slide[data-question="${currentSlide}"]`);
-                next.classList.add('active', 'slide-enter');
-                updateProgress();
-                updateLogoColors(currentSlide);
-
-                // Hide intro after first question
-                if (currentSlide === 2) {
-                    const intro = document.getElementById('introCard');
-                    intro.style.transition = 'all 0.4s ease';
-                    intro.style.opacity = '0';
-                    intro.style.maxHeight = '0';
-                    intro.style.padding = '0';
-                    intro.style.margin = '0';
-                    intro.style.overflow = 'hidden';
-                }
-
-                setTimeout(() => next.classList.remove('slide-enter'), 400);
-            }, 300);
-        }
-
-        function prevSlide() {
-            if (currentSlide <= 1) return;
-
-            const current = document.querySelector(`.question-slide[data-question="${currentSlide}"]`);
-            current.style.animation = 'none';
-            current.offsetHeight; // reflow
-            current.style.animation = '';
-            current.classList.remove('active');
-
-            currentSlide--;
-            const prev = document.querySelector(`.question-slide[data-question="${currentSlide}"]`);
-            prev.classList.add('active', 'slide-enter-back');
-            updateProgress();
-            updateLogoColors(currentSlide);
-
-            setTimeout(() => prev.classList.remove('slide-enter-back'), 400);
-        }
-
-        function updateProgress() {
-            const pct = Math.round(((currentSlide - 1) / totalSlides) * 100);
-            document.getElementById('progressFill').style.width = pct + '%';
-            document.getElementById('progressLabel').textContent = `שאלה ${currentSlide} מתוך ${totalSlides}`;
-            document.getElementById('progressPercent').textContent = pct + '%';
-        }
-
-        // Char count
-        function updateCharCount(textarea) {
-            document.getElementById('charCount').textContent = textarea.value.length;
-        }
+        cycleLogoColors();
+        setInterval(cycleLogoColors, 3500);
 
         // Submit
         async function submitForm() {
-            // Collect the textarea
-            const textarea = document.querySelector('textarea[data-name="q6"]');
-            if (textarea.value.trim()) {
-                answers.q6 = textarea.value.trim();
+            // Validate required questions (1-5)
+            const required = ['q1','q2','q3','q4','q5'];
+            const missing = required.filter(q => !answers[q]);
+            if (missing.length) {
+                missing.forEach(q => document.getElementById('card-' + q)?.classList.add('error'));
+                const errMsg = document.getElementById('errorMsg');
+                errMsg.classList.add('show');
+                document.getElementById('card-' + missing[0]).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
             }
+            document.getElementById('errorMsg').classList.remove('show');
 
-            // Disable submit button
-            const submitBtn = document.querySelector('.btn-submit');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'שולח...';
+            const btn = document.querySelector('.btn-submit');
+            btn.disabled = true; btn.textContent = 'שולח...';
 
-            // Build structured data
-            const surveyData = {
+            const q6text = document.getElementById('q6-text').value.trim();
+            const data = {
                 timestamp: new Date().toISOString(),
-                q1_purchase_ease: answers.q1 || null,
-                q2_matched_expectations: answers.q2 || null,
-                q3_service_experience: answers.q3 || null,
-                q4_navigation_ease: answers.q4 || null,
-                q5_cleanliness: answers.q5 || null,
-                q6_improvement_suggestions: answers.q6 || ''
+                q1_purchase_ease: answers.q1,
+                q2_matched_expectations: answers.q2,
+                q3_service_experience: answers.q3,
+                q4_navigation_ease: answers.q4,
+                q5_cleanliness: answers.q5,
+                q6_improvement_suggestions: q6text
             };
 
-            // Send to Firebase
-            let success = false;
-            if (window.submitToFirebase) {
-                success = await window.submitToFirebase(surveyData);
-            }
+            if (window.submitToFirebase) await window.submitToFirebase(data);
+            else console.log('Survey data:', data);
 
-            if (!success) {
-                console.log('Fallback — Survey Data:', surveyData);
-            }
-
-            // Hide form
-            document.getElementById('questionsContainer').style.display = 'none';
-            document.getElementById('introCard').style.display = 'none';
-            document.getElementById('progressWrapper').style.display = 'none';
-
-            // Show thank you
-            const thankYou = document.getElementById('thankYou');
-            thankYou.classList.add('active');
-
-            // Launch confetti!
+            document.getElementById('formArea').style.display = 'none';
+            document.querySelector('.intro-card').style.display = 'none';
+            document.getElementById('thankYou').classList.add('active');
             launchConfetti();
         }
 
-        // Confetti
         function launchConfetti() {
-            const colors = ['#E6007E', '#00B4C5', '#F39200', '#6D3078', '#0080C9', '#78B82A', '#FDC300'];
-            const container = document.body;
-
-            for (let i = 0; i < 60; i++) {
-                setTimeout(() => {
-                    const piece = document.createElement('div');
-                    piece.className = 'confetti-piece';
-                    piece.style.left = Math.random() * 100 + 'vw';
-                    piece.style.top = '-10px';
-                    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    piece.style.width = (Math.random() * 8 + 5) + 'px';
-                    piece.style.height = (Math.random() * 8 + 5) + 'px';
-                    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-                    piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                    piece.style.animationDelay = '0s';
-                    container.appendChild(piece);
-
-                    setTimeout(() => piece.remove(), 4000);
-                }, i * 30);
-            }
+            const colors = ['#E6007E','#00B4C5','#F39200','#6D3078','#0080C9','#78B82A','#FDC300'];
+            for (let i=0;i<70;i++) setTimeout(() => {
+                const p = document.createElement('div');
+                p.className = 'confetti-piece';
+                p.style.cssText = `left:${Math.random()*100}vw;top:-10px;width:${Math.random()*8+5}px;height:${Math.random()*8+5}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${Math.random()*2+2}s`;
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 4000);
+            }, i * 25);
         }
-
-        // Init — set initial colors via style (enables CSS transitions)
-        updateProgress();
-        updateLogoColors(1);
     </script>
 </body>
 </html>
